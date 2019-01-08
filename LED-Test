@@ -1,0 +1,71 @@
+
+//defines all the pins
+#define blue1 8
+#define blue2 9
+#define red1 11
+#define red2 10
+#define buttonPin 6
+//used later to make sure button presses are only being counted once
+int buttonState = 0;
+int lastButtonState = 0;
+//When the arduino initalizes, it adds one to buttonPushCounter for some reason
+//I set it to -1 to offset that increase, since I wanted it to start at 0
+int buttonPushCounter = -1;
+
+void setup() {
+  //defines all the pin modes
+  pinMode(blue1,OUTPUT);
+  pinMode(blue2,OUTPUT);
+  pinMode(red1,OUTPUT);
+  pinMode(red2,OUTPUT);
+  pinMode(buttonPin,INPUT);
+
+}
+
+void loop() {
+  //reads the current button state
+  buttonState = digitalRead(buttonPin);
+  //if the current button state is HIGH, and diffeerent from last button state
+  if (buttonState == HIGH && buttonState != lastButtonState){
+    //cycles through the different servers
+    buttonPushCounter++;
+    buttonPushCounter %= 4;
+    delay(50);
+  }
+  lastButtonState = buttonState;
+  //server 1 team 1
+  if(buttonPushCounter == 0){
+    digitalWrite(blue1, HIGH);
+    digitalWrite(blue2, LOW);
+    digitalWrite(red1, LOW);
+    digitalWrite(red2, LOW);
+  }
+  //server 2 team 1
+  else if (buttonPushCounter == 1){
+    digitalWrite(blue1, HIGH);
+    digitalWrite(blue2, HIGH);
+    digitalWrite(red1, LOW);
+    digitalWrite(red2, LOW);
+  }
+  //server 1 team 2
+  else if (buttonPushCounter == 2){
+    digitalWrite(blue1, LOW);
+    digitalWrite(blue2, LOW);
+    digitalWrite(red1, HIGH);
+    digitalWrite(red2, LOW);
+  }
+  //server 2 team 2
+  else if (buttonPushCounter == 3){
+    digitalWrite(blue1, LOW);
+    digitalWrite(blue2, LOW);
+    digitalWrite(red1, HIGH);
+    digitalWrite(red2, HIGH);
+  }
+  //if there's an error, all lights will turn on
+  else{
+    digitalWrite(blue1, HIGH);
+    digitalWrite(blue2, HIGH);
+    digitalWrite(red1, HIGH);
+    digitalWrite(red2, HIGH);
+  }
+}
